@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import { store, persistor } from './src/store';
 import { PersistGate } from 'redux-persist/integration/react';
 
+
 if (__DEV__) {
     require('react-devtools');
     import('./ReactotronConfig').then(() => console.log('Reactotron Configured'));
