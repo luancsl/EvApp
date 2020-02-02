@@ -15,6 +15,7 @@ import 'moment/min/locales';
 import 'moment/locale/pt-br';
 import Header from './components/header';
 import Equation from '../../utils';
+import SplashScreen from 'react-native-splash-screen'
 
 class Home extends Component {
 
@@ -86,6 +87,7 @@ class Home extends Component {
             },
             { enableHighAccuracy: true, timeout: 30000, maximumAge: 1000 }
         );
+        SplashScreen.hide();
     }
 
     get_data(atraso) {
