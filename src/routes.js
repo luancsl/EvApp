@@ -7,10 +7,7 @@ import { Home, History, Calc, About, DrawerComponent } from '@pages';
 import { Icon, withBadge } from 'react-native-elements'
 import { Creators as ConfigActions } from "@store/ducks/config";
 import { Badge } from "react-native-paper";
-
 const { changeHistoric, getHistoric } = ConfigActions;
-
-console.log("AALDFASDF: ", ConfigActions);
 
 const DrawerStack = createMaterialBottomTabNavigator({
     Calc: {
@@ -19,6 +16,7 @@ const DrawerStack = createMaterialBottomTabNavigator({
             header: null,
             tabBarLabel: 'Calculadora',
             tabBarIcon: ({ tintColor }) => (
+
                 <Icon
                     name='calculator-variant'
                     type='material-community'
