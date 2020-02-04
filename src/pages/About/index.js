@@ -4,7 +4,7 @@ import Modal from 'react-native-modalbox';
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Creators as SpaceActions } from "../../store/ducks/space";
-
+import { Image, Button, Input, Icon, SearchBar } from 'react-native-elements'
 
 class About extends Component {
 
@@ -16,9 +16,9 @@ class About extends Component {
     }
 
     render() {
+
         return (
             <View>
-
             </View>
         );
     }

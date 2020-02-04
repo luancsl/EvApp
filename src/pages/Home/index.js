@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, Dimensions, TextInput, FlatList, TouchableOpacity, AsyncStorage } from "react-native";
+import { View, Text, StyleSheet, Dimensions, TextInput, FlatList, TouchableOpacity, ActivityIndicator } from "react-native";
 import { sia, requestElevation } from "../../services/sia_api";
 import MapView from "react-native-maps";
-import { Image, Icon } from 'react-native-elements'
+import { Image, Button, Input, Icon, SearchBar } from 'react-native-elements'
 import Modal from 'react-native-modalbox';
 import { material, systemWeights } from 'react-native-typography';
 import { connect } from "react-redux";
@@ -13,9 +13,13 @@ import Geolocation from '@react-native-community/geolocation';
 import moment from "moment";
 import 'moment/min/locales';
 import 'moment/locale/pt-br';
-import Header from './components/header';
 import Equation from '../../utils';
+import { ModalPicker } from '@components';
 import SplashScreen from 'react-native-splash-screen'
+import { copilot, walkthroughable, CopilotStep } from 'react-native-copilot';
+import { AppSettings, SearchBarGooglePlace } from "./components";
+
+const CopilotView = walkthroughable(View);
 
 class Home extends Component {
 
@@ -26,6 +30,9 @@ class Home extends Component {
         mapType: 'standard',
         etc_list: [],
         data: null,
+        search: '',
+        appSettingsVisible: false,
+        mapSettingsVisible: false,
         defaultConfig: {
             distance: null,
             service: null,
@@ -44,20 +51,20 @@ class Home extends Component {
         region: {
             latitude: 0,
             longitude: 0,
-            latitudeDelta: 0.0142,
-            longitudeDelta: 0.0231
+            latitudeDelta: 0.0131,
+            longitudeDelta: 0.0131
         },
         initialRegion: {
             latitude: 0,
             longitude: 0,
-            latitudeDelta: 0.0142,
-            longitudeDelta: 0.0231
+            latitudeDelta: 0.0131,
+            longitudeDelta: 0.0131
         },
         marker: {
             latitude: 0,
             longitude: 0,
-            latitudeDelta: 0.0142,
-            longitudeDelta: 0.0231
+            latitudeDelta: 0.0131,
+            longitudeDelta: 0.0131
         },
         space: null
     };
@@ -88,6 +95,7 @@ class Home extends Component {
             { enableHighAccuracy: true, timeout: 30000, maximumAge: 1000 }
         );
         SplashScreen.hide();
+        this.props.start();
     }
 
     get_data(atraso) {
@@ -205,6 +213,28 @@ class Home extends Component {
         this.get_pet();
     }
 
+    _handleAppSettingsPressed() {
+        this.setState({ appSettingsVisible: true });
+    }
+
+    _handleMapSettingsPressed() {
+        this.setState({ mapSettingsVisible: true });
+    }
+
+    _handleSearchPlace(value) {
+        const { lat, lng } = value;
+        const region = {
+            ...this.state.region,
+            latitude: lat,
+            longitude: lng,
+        };
+        this.setState({
+            ...this.state,
+            region,
+            marker: region
+        });
+    }
+
 
 
     render() {
@@ -213,6 +243,7 @@ class Home extends Component {
 
         return (
             <View style={{ flex: 1 }}>
+
                 <Modal style={styles.modal4} position={"bottom"} ref={"modal4"} coverScreen={true}>
                     <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
 
@@ -237,7 +268,6 @@ class Home extends Component {
                                 style={{ width: 80, height: 90 }}
                             />
                         </TouchableOpacity>
-
 
                     </View>
                 </Modal>
@@ -290,14 +320,82 @@ class Home extends Component {
 
                             </MapView>
 
-                            <Header
-                                eto={this.state.eto}
-                                equation={this.state.equation}
-                                searching={this.state.searching}
-                                onPressLocation={() => this._myLocationMap()}
-                                onPressMap={() => this.refs.modal4.open()}
-                                onChangeEquation={(value) => this._changeEquation(value)}
-                                onChangeDefaultConfig={() => this._updateDefaultConfig()} />
+
+                            <View style={[styles.header, { height: '40%' }]}>
+
+                                <View style={{ flex: 1 }}>
+                                    <AppSettings
+                                        visible={this.state.appSettingsVisible}
+                                        onClosed={() => (this.setState({ appSettingsVisible: false }))}
+                                    />
+                                    <SearchBarGooglePlace
+                                        placeholder="Entrar Local"
+                                        onSearchPlace={(value) => this._handleSearchPlace(value)}
+                                    />
+                                    <View style={{ flex: .5, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: 10, backgroundColor: 'rgba(255, 255, 255, 1)' }}>
+                                        {
+                                            this.state.searching ?
+                                                <ActivityIndicator size="large" color="#0000ff" />
+                                                :
+                                                <Text style={{ fontSize: 30 }}> {parseFloat(this.state.eto).toFixed(3)} mm </Text>
+                                        }
+                                    </View>
+
+                                    <View style={{ flex: .5, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginVertical: 10 }}>
+                                        <CopilotStep text="Olá este é o seu botão de configuração do app, onde você modifica o tipo da equação, a distantancia da equação e o tipo do dado!" order={1} name="openApp">
+                                            <CopilotView>
+                                                <Icon
+                                                    raised
+                                                    name='settings-outline'
+                                                    type='material-community'
+                                                    color='#f50'
+                                                    size={15}
+                                                    containerStyle={{ borderWidth: 1, borderRadius: 50, backgroundColor: '#1114', borderColor: '#1111' }}
+                                                    underlayColor='#c0c0c0'
+                                                    onPress={() => this._handleAppSettingsPressed()} />
+                                            </CopilotView>
+                                        </CopilotStep>
+                                        <CopilotStep text="Aqui você pode selecionar sua localização " order={2} name="openApp2">
+                                            <CopilotView>
+                                                <Icon
+                                                    raised
+                                                    name='map-marker-radius'
+                                                    type='material-community'
+                                                    color='#f50'
+                                                    size={15}
+                                                    containerStyle={{ wborderWidth: 1, borderRadius: 50, backgroundColor: '#1114', borderColor: '#1111' }}
+                                                    onPress={() => this._myLocationMap()} />
+                                            </CopilotView>
+                                        </CopilotStep>
+
+                                        <Icon
+                                            raised
+                                            name='map-outline'
+                                            type='material-community'
+                                            color='#f50'
+                                            size={15}
+                                            containerStyle={{ borderWidth: 1, borderRadius: 50, backgroundColor: '#1114', borderColor: '#1111' }}
+                                            onPress={() => this.refs.modal4.open()} />
+
+                                        <ModalPicker
+                                            data={['penman-monteith', 'hargreaves-samani']}
+                                            selected={this.state.equation}
+                                            onPress={(value) => this._changeEquation(value)}
+                                            icon={
+                                                <Icon
+                                                    raised
+                                                    name='function'
+                                                    type='material-community'
+                                                    color='#f50'
+                                                    size={15}
+                                                    containerStyle={{ borderWidth: 1, borderRadius: 50, backgroundColor: '#1114', borderColor: '#1111' }}
+                                                />
+                                            }
+                                        />
+                                    </View>
+                                </View>
+                            </View>
+
                         </View>
                     </View>
                 </View>
@@ -317,7 +415,17 @@ const mapDispatchToProps = dispatch =>
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Home);
+)(copilot({
+    overlay: 'svg',
+    animated: true,
+    verticalOffset: 25,
+    labels: {
+        previous: 'Anterior',
+        next: 'Proximo',
+        skip: 'Pular',
+        finish: 'Terminar',
+    }
+})(Home));
 
 
 const styles = StyleSheet.create({
@@ -353,7 +461,7 @@ const styles = StyleSheet.create({
         height: '100%',
         left: 0,
         right: 0,
-        top: 0,
+        top: 50,
         bottom: 0,
 
     },
@@ -383,5 +491,14 @@ const styles = StyleSheet.create({
         color: "#999",
         fontSize: 12,
         marginTop: 5
-    }
+    },
+    header: {
+        flex: 1,
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 0,
+    },
 });

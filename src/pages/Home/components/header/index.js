@@ -9,7 +9,9 @@ import { bindActionCreators } from "redux";
 import { Creators as SpaceActions } from "../../../../store/ducks/config";
 import { Creators as ConfigActions, Types } from "../../../../store/ducks/config";
 import { ModalPicker, Modal } from '@components';
+import { copilot, walkthroughable, CopilotStep } from 'react-native-copilot';
 
+const CopilotIcon = walkthroughable(Icon);
 
 class HeaderComponent extends PureComponent {
 
@@ -20,13 +22,7 @@ class HeaderComponent extends PureComponent {
             search: '',
             modal: false,
             equation: 'penman-monteith',
-            defaultConfig: {
-                distance: null,
-                service: null,
-                type: null,
-                equation: null,
-
-            },
+            
         };
     }
 
@@ -43,198 +39,11 @@ class HeaderComponent extends PureComponent {
 
     }
 
-    _setDefaultConfig() {
-        const { changeDefaultConfig } = this.props;
-        changeDefaultConfig(this.state.defaultConfig);
-        this.props.onChangeDefaultConfig();
-        this.setState({ modal: false });
-
-    }
-
     render() {
         const { config } = this.props;
 
         return (
-            <View style={[styles.header, { height: '40%' }]}>
-                <View style={{ flex: 1 }}>
-
-                    <Modal
-                        height='70%'
-                        width='95%'
-                        visible={this.state.modal}
-                        transparent={true}
-                        animationType="fade"
-                        hardwareAccelerated={true}
-                        backgroundColor='#0001'
-                        pressOut={() => this._setDefaultConfig()}
-                    >
-                        <View style={{ flex: 1, padding: 10, paddingTop: 20 }}>
-                            <View style={{ flex: .2 }}>
-                                <Text>Distancia das Estações   {this.state.defaultConfig.distance}</Text>
-                                <Slider
-                                    maximumValue={100}
-                                    minimumValue={1}
-                                    value={this.state.defaultConfig.distance}
-                                    step={2}
-                                    onValueChange={(value) => this.setState({
-                                        ...this.state,
-                                        defaultConfig: {
-                                            ...this.state.defaultConfig,
-                                            distance: parseFloat(value)
-                                        }
-                                    })}
-                                />
-                            </View>
-                            <View style={{ flex: .2 }}>
-                                <Text style={{ textAlignVertical: 'center' }}>Equação: </Text>
-                                <Picker
-                                    selectedValue={this.state.defaultConfig.equation}
-                                    style={{ height: 50, width: 250 }}
-                                    onValueChange={(itemValue, itemIndex) => this.setState({
-                                        ...this.state,
-                                        defaultConfig: {
-                                            ...this.state.defaultConfig,
-                                            equation: itemValue
-                                        }
-                                    })}>
-                                    {
-                                        [
-                                            'Penman-Monteith',
-                                            'Hargreaves-Samani'
-                                        ].map((item) => (
-                                            <Picker.Item label={item} value={item.toLowerCase()} />
-                                        ))
-                                    }
-                                </Picker>
-                            </View>
-                            <View style={{ flex: .2 }}>
-                                <Text style={{ textAlignVertical: 'center' }}>Serviço: </Text>
-                                <Picker
-                                    selectedValue={this.state.defaultConfig.service}
-                                    style={{ height: 50, width: 250 }}
-                                    onValueChange={(itemValue, itemIndex) => this.setState({
-                                        ...this.state,
-                                        defaultConfig: {
-                                            ...this.state.defaultConfig,
-                                            service: itemValue
-                                        }
-                                    })}>
-                                    {
-                                        [
-                                            'Inmet',
-                                            'Nasa-Power'
-                                        ].map((item) => (
-                                            <Picker.Item label={item} value={item.toLowerCase()} />
-                                        ))
-                                    }
-                                </Picker>
-                            </View>
-                            <View style={{ flex: .2 }}>
-                                <Text style={{ textAlignVertical: 'center' }}>Tipo: </Text>
-                                <Picker
-                                    selectedValue={this.state.defaultConfig.type}
-                                    style={{ height: 50, width: 250 }}
-                                    onValueChange={(itemValue, itemIndex) => this.setState({
-                                        ...this.state,
-                                        defaultConfig: {
-                                            ...this.state.defaultConfig,
-                                            type: itemValue
-                                        }
-                                    })}>
-                                    {
-                                        [
-                                            'Station',
-                                            'Satellite'
-                                        ].map((item) => (
-                                            <Picker.Item label={item} value={item.toLowerCase()} />
-                                        ))
-                                    }
-                                </Picker>
-                            </View>
-                            <View style={{ flex: .2, marginVertical: 10 }}>
-                                <Button
-                                    icon={{
-                                        name: 'check',
-                                        type: 'material-community',
-                                        color: '#fff',
-                                        size: 25,
-                                    }}
-                                    title="Salvar"
-                                    size={50}
-                                    type="solid"
-                                    buttonStyle={{ backgroundColor: '#1114' }}
-                                    onPress={() => this._setDefaultConfig()} />
-                            </View>
-                        </View>
-                    </Modal>
-
-
-                    <View style={{ borderRadius: 2, overflow: 'hidden' }}>
-                        <SearchBar
-                            platform='android'
-                            placeholder="Pesquisar"
-                            onChangeText={(value) => (this.setState({ search: value }))}
-                            value={this.state.search}
-                        />
-                    </View>
-
-                    <View style={{ flex: .5, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: 10, backgroundColor: 'rgba(255, 255, 255, 1)' }}>
-                        {
-                            this.props.searching ?
-                                <ActivityIndicator size="large" color="#0000ff" />
-                                :
-                                <Text style={{ fontSize: 30 }}> {parseFloat(this.props.eto).toFixed(3)} mm </Text>
-                        }
-                    </View>
-
-                    <View style={{ flex: .5, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginVertical: 10 }}>
-                        <Icon
-                            raised
-                            name='settings-outline'
-                            type='material-community'
-                            color='#f50'
-                            size={15}
-                            containerStyle={{ borderWidth: 1, borderRadius: 50, backgroundColor: '#1114', borderColor: '#1111' }}
-                            underlayColor='#c0c0c0'
-                            onPress={() => this.setState({ modal: true })} />
-                        <Icon
-                            raised
-                            name='map-marker-radius'
-                            type='material-community'
-                            color='#f50'
-                            size={15}
-                            containerStyle={{ wborderWidth: 1, borderRadius: 50, backgroundColor: '#1114', borderColor: '#1111' }}
-                            onPress={() => this.props.onPressLocation()} />
-                        <Icon
-                            raised
-                            name='map-outline'
-                            type='material-community'
-                            color='#f50'
-                            size={15}
-                            containerStyle={{ borderWidth: 1, borderRadius: 50, backgroundColor: '#1114', borderColor: '#1111' }}
-                            onPress={() => this.props.onPressMap()} />
-
-                        <ModalPicker
-                            data={['penman-monteith', 'hargreaves-samani']}
-                            selected={this.state.equation}
-                            onPress={(value) => this._onPressChangeEquation(value)}
-                            icon={
-                                <Icon
-                                    raised
-                                    name='function'
-                                    type='material-community'
-                                    color='#f50'
-                                    size={15}
-                                    containerStyle={{ borderWidth: 1, borderRadius: 50, backgroundColor: '#1114', borderColor: '#1111' }}
-                                />
-
-                            }
-                        />
-
-                    </View>
-
-                </View>
-            </View>
+            
         );
     }
 }
@@ -247,10 +56,13 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
     bindActionCreators(ConfigActions, dispatch);
 
-export default connect(
+export default copilot({
+    animated: true, // Can be true or false
+    overlay: 'svg', // Can be either view or svg
+})(connect(
     mapStateToProps,
     mapDispatchToProps
-)(HeaderComponent);
+)(HeaderComponent));
 
 const styles = StyleSheet.create({
     modal: {

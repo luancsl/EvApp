@@ -8,11 +8,12 @@ export default (props) => {
             transparent={props.transparent}
             animationType={props.animationType}
             hardwareAccelerated={props.hardwareAccelerated}
+            onRequestClose={props.onRequestClose}
         >
             <TouchableWithoutFeedback onPress={() => { props.pressOut() }}>
                 <View style={[styles.modal, { backgroundColor: props.backgroundColor }]} >
                     <TouchableWithoutFeedback>
-                        <View style={[styles.modal3, { height: props.height, width: props.width }]} >
+                        <View style={[styles.modal3, { height: props.height, width: props.width }, props.style]} >
                             {props.children}
                         </View>
                     </TouchableWithoutFeedback>
