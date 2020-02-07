@@ -3873,6 +3873,11 @@ http-signature@~1.2.0:
     jsprim "^1.2.2"
     sshpk "^1.7.0"
 
+i18n-js@^3.5.1:
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/i18n-js/-/i18n-js-3.5.1.tgz#9787450894059bec1af791123231e59898eb97c1"
+  integrity sha512-nJgbE5Vj9qzOQfjdVd/uoMoO8ppVaB/3LB6KOmMfD8IQ1vNNh307iHyQLK8ZnLYWkAszfPvVpYmUt1Le/RuHMQ==
+
 iconv-lite@0.4.24, iconv-lite@^0.4.17, iconv-lite@^0.4.24, iconv-lite@^0.4.4, iconv-lite@~0.4.13:
   version "0.4.24"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.24.tgz#2022b4b25fbddc21d2f524974a474aafe733908b"
@@ -6850,6 +6855,11 @@ react-native-elements@^1.2.0:
     prop-types "^15.7.2"
     react-native-ratings "^6.3.0"
     react-native-status-bar-height "^2.2.0"
+
+react-native-exception-handler@^2.10.8:
+  version "2.10.8"
+  resolved "https://registry.yarnpkg.com/react-native-exception-handler/-/react-native-exception-handler-2.10.8.tgz#1a7f846592d888d23adaf797e31802585f1d9ff0"
+  integrity sha512-ZN+jwpADRkCUNdad/50k0mZdMoICGrGdtaxgvRU+pNcWRRBAXJhuo4+jY0eQaoVpx1ghycGE6tBu9ka8gL2NOQ==
 
 react-native-gesture-handler@^1.5.0:
   version "1.5.0"

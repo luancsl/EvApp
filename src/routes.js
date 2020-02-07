@@ -7,7 +7,9 @@ import { Home, History, Calc, About, DrawerComponent } from '@pages';
 import { Icon, withBadge } from 'react-native-elements'
 import { Creators as ConfigActions } from "@store/ducks/config";
 import { Badge } from "react-native-paper";
+import { translate } from "@locales";
 const { changeHistoric, getHistoric } = ConfigActions;
+
 
 const DrawerStack = createMaterialBottomTabNavigator({
     Calc: {
@@ -61,7 +63,7 @@ const DrawerStack = createMaterialBottomTabNavigator({
         navigationOptions: (props) => ({
             tabBarBadge: props.screenProps.badge,
             header: null,
-            tabBarLabel: 'About',
+            tabBarLabel: translate('ABOUT_label'),
             tabBarIcon: ({ tintColor }) => (
                 <Icon
                     name='information'

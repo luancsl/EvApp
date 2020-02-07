@@ -6,6 +6,7 @@ import { bindActionCreators } from "redux";
 import { Creators as SpaceActions } from "../../store/ducks/space";
 import { Image, Divider } from 'react-native-elements'
 import { overlay } from "react-native-paper";
+import { translate } from "@locales";
 
 class About extends Component {
 
@@ -22,9 +23,7 @@ class About extends Component {
                 <View style={styles.header}>
                     <Text style={[material.display1, { marginTop: 15 }]}>EvApp</Text>
                     <Text style={[material.body1, { paddingTop: 4, paddingHorizontal: 5 }]}>
-                        Aplicativo desenvolvido na Universidade Federal Rural de Pernambuco,
-                        Campus Garanhuns, durante um projeto de extensão.Tem como funcionalidade o calculo da evapotranspiração
-                        de uma dada região, através de dados do Inmet e NASA Power.
+                        {translate('ABOUT_description')}
                     </Text>
                 </View>
                 <View style={styles.body}>
@@ -32,9 +31,9 @@ class About extends Component {
                         <TouchableOpacity style={{ padding: 5 }} onPress={() => (Linking.openURL('http://lattes.cnpq.br/9321874150400095'))}>
                             <Text>Luan Lins</Text>
                             <View style={{ marginLeft: 5 }}>
-                                <Text style={material.caption}>Bacharel em Ciência da Computação</Text>
+                                <Text style={material.caption}>{translate('ABOUT_member01_level')}</Text>
                                 <Text style={material.caption}>luancsl95@gmail.com</Text>
-                                <Text style={material.caption}>Desenvolvedor</Text>
+                                <Text style={material.caption}>{translate('ABOUT_member01_function')}</Text>
                             </View>
                         </TouchableOpacity>
 
@@ -43,9 +42,9 @@ class About extends Component {
                         <TouchableOpacity style={{ padding: 5 }} onPress={() => (Linking.openURL('http://lattes.cnpq.br/2498961747789618'))}>
                             <Text>Jean Teixeira</Text>
                             <View style={{ marginLeft: 5 }}>
-                                <Text style={material.caption}>Doutor em Ciência da Computação</Text>
+                                <Text style={material.caption}>{translate('ABOUT_member02_level')}</Text>
                                 <Text style={material.caption}>teixeirajean1@gmail.com</Text>
-                                <Text style={material.caption}>Orientador</Text>
+                                <Text style={material.caption}>{translate('ABOUT_member02_function')}</Text>
                             </View>
                         </TouchableOpacity>
 
@@ -54,9 +53,9 @@ class About extends Component {
                         <TouchableOpacity style={{ padding: 5 }} onPress={() => (Linking.openURL('http://lattes.cnpq.br/3010818143250408'))}>
                             <Text>Romualdo Lima</Text>
                             <View style={{ marginLeft: 5 }}>
-                                <Text style={material.caption}>Doutorado em Tecnologias Energéticas Nucleares</Text>
+                                <Text style={material.caption}>{translate('ABOUT_member03_level')}</Text>
                                 <Text style={material.caption}>romualdo.lima@ufrpe.br</Text>
-                                <Text style={material.caption}>Orientador</Text>
+                                <Text style={material.caption}>{translate('ABOUT_member03_function')}</Text>
                             </View>
                         </TouchableOpacity>
 
