@@ -1,4 +1,4 @@
-package com.evapp;
+package com.uname.evapp;
 
 import android.app.Application;
 import android.content.Context;

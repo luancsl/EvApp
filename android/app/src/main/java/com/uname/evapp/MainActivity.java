@@ -1,4 +1,4 @@
-package com.evapp;
+package com.uname.evapp;
 import android.os.Bundle;
 import com.facebook.react.ReactActivity;
 import org.devio.rn.splashscreen.SplashScreen;

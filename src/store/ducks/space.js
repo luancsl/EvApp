@@ -15,7 +15,7 @@ const INITIAL_STATE = [];
 /* Functions Reducers */
 const addSpace = (state = INITIAL_STATE, action) => {
 
-    if (state.length == 10) { state.pop() }
+    if (state.length == 20) { state.pop() }
 
     if (action.manual) {
         return (
