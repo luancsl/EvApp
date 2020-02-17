@@ -7,7 +7,8 @@ import { Home, History, Calc, About, DrawerComponent } from '@pages';
 import { Icon, withBadge } from 'react-native-elements'
 import { Creators as ConfigActions } from "@store/ducks/config";
 import { Badge } from "react-native-paper";
-import { translate } from "@locales";
+import { Color } from "@common";
+import { string } from "@locales";
 const { changeHistoric, getHistoric } = ConfigActions;
 
 
@@ -16,7 +17,7 @@ const DrawerStack = createMaterialBottomTabNavigator({
         screen: Calc,
         navigationOptions: {
             header: null,
-            tabBarLabel: 'Calculadora',
+            tabBarLabel: string('CALC_label'),
             tabBarIcon: ({ tintColor }) => (
 
                 <Icon
@@ -31,7 +32,7 @@ const DrawerStack = createMaterialBottomTabNavigator({
         screen: Home,
         navigationOptions: {
             header: null,
-            tabBarLabel: 'Home',
+            tabBarLabel: string('HOME_label'),
             tabBarIcon: ({ tintColor }) => (
                 <Icon name="home-outline" type='material-community' color={tintColor} size={25} />
             )
@@ -42,7 +43,7 @@ const DrawerStack = createMaterialBottomTabNavigator({
         screen: History,
         navigationOptions: {
             header: null,
-            tabBarLabel: 'History',
+            tabBarLabel: string('HISTORIC_label'),
             tabBarIcon: ({ tintColor }) => {
                 const BadgedIcon = withBadge(null, { hidden: getHistoric(), left: 20, top: -8 })(Icon)
                 return (
@@ -63,7 +64,7 @@ const DrawerStack = createMaterialBottomTabNavigator({
         navigationOptions: (props) => ({
             tabBarBadge: props.screenProps.badge,
             header: null,
-            tabBarLabel: translate('ABOUT_label'),
+            tabBarLabel: string('ABOUT_label'),
             tabBarIcon: ({ tintColor }) => (
                 <Icon
                     name='information'
@@ -78,7 +79,7 @@ const DrawerStack = createMaterialBottomTabNavigator({
     barStyle: {
         height: '10%',
         padding: 0,
-        backgroundColor: '#694fad'
+        backgroundColor: Color.primary
     },
 })
 

@@ -5,8 +5,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Creators as SpaceActions } from "../../store/ducks/space";
 import { Image, Divider } from 'react-native-elements'
-import { overlay } from "react-native-paper";
-import { translate } from "@locales";
+import { string } from "@locales";
 
 class About extends Component {
 
@@ -23,39 +22,39 @@ class About extends Component {
                 <View style={styles.header}>
                     <Text style={[material.display1, { marginTop: 15 }]}>EvApp</Text>
                     <Text style={[material.body1, { paddingTop: 4, paddingHorizontal: 5 }]}>
-                        {translate('ABOUT_description')}
+                        {string('ABOUT_description')}
                     </Text>
                 </View>
                 <View style={styles.body}>
                     <ScrollView showsVerticalScrollIndicator={false}>
-                        <TouchableOpacity style={{ padding: 5 }} onPress={() => (Linking.openURL('http://lattes.cnpq.br/9321874150400095'))}>
-                            <Text>Luan Lins</Text>
+                        <View style={{ padding: 5 }} >
+                            <Text>Luan Carlos Soares Lins</Text>
                             <View style={{ marginLeft: 5 }}>
-                                <Text style={material.caption}>{translate('ABOUT_member01_level')}</Text>
+                                <Text style={material.caption}>{string('ABOUT_member01_level')}</Text>
                                 <Text style={material.caption}>luancsl95@gmail.com</Text>
-                                <Text style={material.caption}>{translate('ABOUT_member01_function')}</Text>
+                                <Text style={material.caption}>{string('ABOUT_member01_function')}</Text>
                             </View>
-                        </TouchableOpacity>
+                        </View>
 
                         <Divider style={{ backgroundColor: '#0004' }} />
 
                         <TouchableOpacity style={{ padding: 5 }} onPress={() => (Linking.openURL('http://lattes.cnpq.br/2498961747789618'))}>
-                            <Text>Jean Teixeira</Text>
+                            <Text>Jean Carlos Teixeira de Araujo</Text>
                             <View style={{ marginLeft: 5 }}>
-                                <Text style={material.caption}>{translate('ABOUT_member02_level')}</Text>
+                                <Text style={material.caption}>{string('ABOUT_member02_level')}</Text>
                                 <Text style={material.caption}>teixeirajean1@gmail.com</Text>
-                                <Text style={material.caption}>{translate('ABOUT_member02_function')}</Text>
+                                <Text style={material.caption}>{string('ABOUT_member02_function')}</Text>
                             </View>
                         </TouchableOpacity>
 
                         <Divider style={{ backgroundColor: '#0004' }} />
 
                         <TouchableOpacity style={{ padding: 5 }} onPress={() => (Linking.openURL('http://lattes.cnpq.br/3010818143250408'))}>
-                            <Text>Romualdo Lima</Text>
+                            <Text>José Romualdo de Sousa Lima</Text>
                             <View style={{ marginLeft: 5 }}>
-                                <Text style={material.caption}>{translate('ABOUT_member03_level')}</Text>
+                                <Text style={material.caption}>{string('ABOUT_member03_level')}</Text>
                                 <Text style={material.caption}>romualdo.lima@ufrpe.br</Text>
-                                <Text style={material.caption}>{translate('ABOUT_member03_function')}</Text>
+                                <Text style={material.caption}>{string('ABOUT_member03_function')}</Text>
                             </View>
                         </TouchableOpacity>
 
@@ -65,19 +64,16 @@ class About extends Component {
                 <View style={styles.footer}>
                     <View style={styles.footerimages}>
                         <Image
+                            source={require('@assets/unamelogo2.png')}
+                            containerStyle={{ width: 51, height: 69, borderRadius: 2, overflow: 'hidden' }}
+                        />
+                        <Image
                             source={require('@assets/uaglogo.png')}
-                            containerStyle={{ borderRadius: 10 }}
-                            style={{ width: 45, height: 70 }}
+                            containerStyle={{ width: 51, height: 70, marginHorizontal: 20, borderRadius: 2, overflow: 'hidden' }}
                         />
                         <Image
                             source={require('@assets/ufrpelogo.png')}
-                            containerStyle={{ borderRadius: 10 }}
-                            style={{ width: 45, height: 70 }}
-                        />
-                        <Image
-                            source={require('@assets/unamelogo.png')}
-                            containerStyle={{ borderRadius: 10 }}
-                            style={{ width: 209, height: 70 }}
+                            containerStyle={{ width: 45, height: 70, borderRadius: 2, overflow: 'hidden' }}
                         />
                     </View>
                 </View>
@@ -101,24 +97,28 @@ export default connect(
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingHorizontal: 7,
-        paddingVertical: 2,
         backgroundColor: '#FFF'
     },
     header: {
-        flex: .4,
-        overflow: 'hidden'
+        height: 185,
+        overflow: 'hidden',
+        paddingHorizontal: 7,
+        paddingVertical: 2,
     },
     body: {
-        flex: .4,
-        overflow: 'hidden'
+        flex: .7,
+        overflow: 'hidden',
+        paddingHorizontal: 7,
+        paddingVertical: 2,
     },
     footer: {
-        flex: .2,
+        flex: .3,
+        padding: 5,
         justifyContent: 'flex-end',
         alignItems: 'center',
         alignContent: 'center',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        backgroundColor: '#F8F8F8'
     },
     footerdescription: {
         flex: 1,
@@ -127,8 +127,8 @@ const styles = StyleSheet.create({
     footerimages: {
         flex: 1,
         flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'flex-end',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         alignContent: 'space-around',
         overflow: 'hidden',
     }

@@ -12,6 +12,7 @@ if (__DEV__) {
     import('./ReactotronConfig').then(() => console.log('Reactotron Configured'));
 }
 
+
 const RNRedux = () => {
     return (
         <Provider store={store}>

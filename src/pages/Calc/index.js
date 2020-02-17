@@ -1,41 +1,44 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView, Picker } from "react-native";
-import { Icon } from 'react-native-elements'
-import ModalDropdown from 'react-native-modal-dropdown';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, Picker } from "react-native";
 import DisplayCalc from "./components/display";
 
 
 class Calc extends Component {
 
-    state = {
-        eto: false,
-        equation: 'penman-monteith'
-
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            eto: false,
+            equation: 'penman-monteith'
+        };
+        this.Display = DisplayCalc('penman-monteith');
+    }
 
     componentDidMount() {
     }
 
+    _onChangeEquation(value) {
+        this.setState({ equation: value });
+        this.Display = DisplayCalc(value);
+    }
+
     render() {
-
-        const Display = DisplayCalc(this.state.equation)
-
+        const Display = this.Display;
         return (
             <View style={{ flex: 1 }}>
                 <View style={styles.header}>
-                    <View style={{ flex: .7, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ flex: .8, paddingBottom: 20, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
 
-                        <Text style={{ fontSize: 30 }}> {this.state.eto ? parseFloat(this.state.eto).toFixed(3) + ' mm' : '...'} </Text>
+                        <Text style={{ fontSize: 30 }}> {this.state.eto ? parseFloat(this.state.eto).toFixed(2) + ' mm' : '...'} </Text>
 
                     </View>
-                    <View style={{ flex: .3, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', paddingVertical: 6 }}>
+                    <View style={{ flex: .2, justifyContent: 'center', alignItems: 'center', paddingVertical: 6 }}>
                         <Picker
                             selectedValue={this.state.equation}
                             style={{ height: 20, width: '59%', borderWidth: 4, borderBottomColor: '#000' }}
                             mode={'dropdown'}
-                            onValueChange={(itemValue, itemIndex) =>
-                                this.setState({ equation: itemValue })
-                            }>
+                            onValueChange={(itemValue, itemIndex) => this._onChangeEquation(itemValue)}
+                        >
                             {
                                 [
                                     'Penman-Monteith',
@@ -55,7 +58,7 @@ class Calc extends Component {
                         />
                     </ScrollView>
                 </SafeAreaView>
-            </View>
+            </View >
         );
     }
 
@@ -86,7 +89,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     header: {
-        flex: 0.3,
+        height: 90,
+        paddingTop: 20,
         overflow: 'hidden',
         backgroundColor: '#fff',
     },
@@ -115,8 +119,9 @@ const styles = StyleSheet.create({
 
     },
     display: {
-        flex: 0.7,
-        paddingVertical: 15,
+        flex: 1,
+        paddingTop: 30,
+        paddingBottom: 20,
         paddingHorizontal: 5,
         backgroundColor: '#fff',
     }

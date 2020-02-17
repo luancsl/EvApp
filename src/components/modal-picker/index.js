@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View, StyleSheet, TouchableOpacity, FlatList } from "react-native";
+import { View,TouchableOpacity, FlatList } from "react-native";
 import { Button, ListItem } from 'react-native-elements'
 import { Modal } from '@components';
 
@@ -27,7 +27,7 @@ class ModalPicker extends PureComponent {
         return (
             <View>
                 <Modal
-                    height='40%'
+                    height='31%'
                     width='80%'
                     visible={this.state.modal}
                     transparent={true}

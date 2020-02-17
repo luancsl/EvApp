@@ -1,10 +1,13 @@
 import React, { PureComponent } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Slider, Picker } from "react-native";
-import { Image, Button, Input, Icon, SearchBar } from 'react-native-elements'
+import { View, Text, Slider, Picker } from "react-native";
+import { Button } from 'react-native-elements'
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { Creators as ConfigActions, Types } from "@store/ducks/config";
-import { ModalPicker, Modal } from '@components';
+import { Creators as ConfigActions } from "@store/ducks/config";
+import { material, systemWeights } from 'react-native-typography';
+import { Modal } from '@components';
+import { string } from "@locales";
+import { Color } from "@common";
 
 class AppSettingsPage extends PureComponent {
     constructor(props) {
@@ -29,12 +32,16 @@ class AppSettingsPage extends PureComponent {
 
     }
 
-    _setDefaultConfig() {
-        const { changeDefaultConfig, onClosed } = this.props;
-        changeDefaultConfig(this.state.defaultConfig);
-        this.setState({ modal: false });
+    _handleClosed() {
+        const { onClosed } = this.props;
         onClosed();
+    }
 
+    async _setDefaultConfig() {
+        const { changeDefaultConfig, onClosed, onSavedSettings } = this.props;
+        onClosed();
+        await changeDefaultConfig(this.state.defaultConfig);
+        onSavedSettings();
 
     }
 
@@ -42,99 +49,105 @@ class AppSettingsPage extends PureComponent {
         this.setState({ modal: this.props.visible });
         return (
             <Modal
-                height='70%'
-                width='95%'
+                height='60%'
+                width='90%'
                 visible={this.state.modal}
                 transparent={true}
                 animationType="fade"
                 hardwareAccelerated={true}
                 backgroundColor='#0001'
-                pressOut={() => this._setDefaultConfig()}
+                onRequestClose={() => this._handleClosed()}
+                pressOut={() => this._handleClosed()}
             >
-                <View style={{ flex: 1, padding: 10, paddingTop: 20 }}>
-                    <View style={{ flex: .2 }}>
-                        <Text>Distancia das Estações   {this.state.defaultConfig.distance}</Text>
-                        <Slider
-                            maximumValue={100}
-                            minimumValue={1}
-                            value={this.state.defaultConfig.distance}
-                            step={2}
-                            onValueChange={(value) => this.setState({
-                                ...this.state,
-                                defaultConfig: {
-                                    ...this.state.defaultConfig,
-                                    distance: parseFloat(value)
+                <View style={{ flex: 1 }}>
+                    <View style={{ flex: .9, paddingHorizontal: 20, paddingTop: 20 }}>
+                        <View style={{ flex: .2, marginBottom: 20 }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', marginBottom: 5 }}>
+                                <Text style={[material.subheading, systemWeights.bold, { color: '#606060' }]}>{string('HOME_settings_select_distance')}: </Text>
+                                <Text>{this.state.defaultConfig.distance} Km</Text>
+                            </View>
+                            <Slider
+                                maximumValue={200}
+                                minimumValue={1}
+                                value={this.state.defaultConfig.distance}
+                                step={2}
+                                onValueChange={(value) => this.setState({
+                                    ...this.state,
+                                    defaultConfig: {
+                                        ...this.state.defaultConfig,
+                                        distance: parseFloat(value)
+                                    }
+                                })}
+                            />
+                        </View>
+                        <View style={{ flex: .2, marginBottom: 20 }}>
+                            <Text style={[material.subheading, systemWeights.bold, { color: '#606060' }]}>{string('HOME_settings_select_equation')}: </Text>
+                            <Picker
+                                style={{ height: 30 }}
+                                selectedValue={this.state.defaultConfig.equation}
+                                onValueChange={(itemValue, itemIndex) => this.setState({
+                                    ...this.state,
+                                    defaultConfig: {
+                                        ...this.state.defaultConfig,
+                                        equation: itemValue
+                                    }
+                                })}>
+                                {
+                                    [
+                                        'Penman-Monteith',
+                                        'Hargreaves-Samani'
+                                    ].map((item) => (
+                                        <Picker.Item label={item} value={item} />
+                                    ))
                                 }
-                            })}
-                        />
-                    </View>
-                    <View style={{ flex: .2 }}>
-                        <Text style={{ textAlignVertical: 'center' }}>Equação: </Text>
-                        <Picker
-                            selectedValue={this.state.defaultConfig.equation}
-                            style={{ height: 50, width: 250 }}
-                            onValueChange={(itemValue, itemIndex) => this.setState({
-                                ...this.state,
-                                defaultConfig: {
-                                    ...this.state.defaultConfig,
-                                    equation: itemValue
+                            </Picker>
+                        </View>
+                        <View style={{ flex: .2, marginBottom: 20 }}>
+                            <Text style={[material.subheading, systemWeights.bold, { color: '#606060' }]}>{string('HOME_settings_select_service')}: </Text>
+                            <Picker
+                                style={{ height: 30 }}
+                                selectedValue={this.state.defaultConfig.service}
+                                onValueChange={(itemValue, itemIndex) => this.setState({
+                                    ...this.state,
+                                    defaultConfig: {
+                                        ...this.state.defaultConfig,
+                                        service: itemValue
+                                    }
+                                })}>
+                                {
+                                    [
+                                        'Inmet',
+                                        'Nasa-Power'
+                                    ].map((item) => (
+                                        <Picker.Item label={item} value={item.toLowerCase()} />
+                                    ))
                                 }
-                            })}>
-                            {
-                                [
-                                    'Penman-Monteith',
-                                    'Hargreaves-Samani'
-                                ].map((item) => (
-                                    <Picker.Item label={item} value={item.toLowerCase()} />
-                                ))
-                            }
-                        </Picker>
-                    </View>
-                    <View style={{ flex: .2 }}>
-                        <Text style={{ textAlignVertical: 'center' }}>Serviço: </Text>
-                        <Picker
-                            selectedValue={this.state.defaultConfig.service}
-                            style={{ height: 50, width: 250 }}
-                            onValueChange={(itemValue, itemIndex) => this.setState({
-                                ...this.state,
-                                defaultConfig: {
-                                    ...this.state.defaultConfig,
-                                    service: itemValue
+                            </Picker>
+                        </View>
+                        <View style={{ flex: .2 }}>
+                            <Text style={[material.subheading, systemWeights.bold, { color: '#606060' }]}>{string('HOME_settings_select_type')}: </Text>
+                            <Picker
+                                style={{ height: 30 }}
+                                selectedValue={this.state.defaultConfig.type}
+                                onValueChange={(itemValue, itemIndex) => this.setState({
+                                    ...this.state,
+                                    defaultConfig: {
+                                        ...this.state.defaultConfig,
+                                        type: itemValue
+                                    }
+                                })}>
+                                {
+                                    [
+                                        'Station',
+                                        'Satellite'
+                                    ].map((item) => (
+                                        <Picker.Item label={item} value={item.toLowerCase()} />
+                                    ))
                                 }
-                            })}>
-                            {
-                                [
-                                    'Inmet',
-                                    'Nasa-Power'
-                                ].map((item) => (
-                                    <Picker.Item label={item} value={item.toLowerCase()} />
-                                ))
-                            }
-                        </Picker>
+                            </Picker>
+                        </View>
                     </View>
-                    <View style={{ flex: .2 }}>
-                        <Text style={{ textAlignVertical: 'center' }}>Tipo: </Text>
-                        <Picker
-                            selectedValue={this.state.defaultConfig.type}
-                            style={{ height: 50, width: 250 }}
-                            onValueChange={(itemValue, itemIndex) => this.setState({
-                                ...this.state,
-                                defaultConfig: {
-                                    ...this.state.defaultConfig,
-                                    type: itemValue
-                                }
-                            })}>
-                            {
-                                [
-                                    'Station',
-                                    'Satellite'
-                                ].map((item) => (
-                                    <Picker.Item label={item} value={item.toLowerCase()} />
-                                ))
-                            }
-                        </Picker>
-                    </View>
-                    <View style={{ flex: .2, marginVertical: 10 }}>
+                    <View style={{ flex: .1, justifyContent: 'flex-end' }}>
                         <Button
                             icon={{
                                 name: 'check',
@@ -149,7 +162,7 @@ class AppSettingsPage extends PureComponent {
                             onPress={() => this._setDefaultConfig()} />
                     </View>
                 </View>
-            </Modal>
+            </Modal >
         );
     }
 

@@ -1,27 +1,31 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity } from "react-native";
-import { Image, Button, Input, Icon, SearchBar, ListItem } from 'react-native-elements'
+import { View, Text, StyleSheet, FlatList } from "react-native";
+import { ListItem } from 'react-native-elements'
 import { Modal } from '@components';
+import { LanguageDevice } from "@common";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { Creators as SpaceActions } from "../../store/ducks/space";
+import { Creators as SpaceActions } from "@store/ducks/space";
 import { material, systemWeights } from 'react-native-typography';
+import { string } from "@locales";
 import moment from "moment";
 import 'moment/min/locales';
-import 'moment/locale/pt-br';
-
 
 class History extends Component {
 
-    state = {
-        select: null,
-        modal: false,
+    constructor(props) {
+        super(props);
+        this.state = {
+            select: null,
+            modal: false,
 
-    };
+        };
+        moment.locale(LanguageDevice());
+    }
+
 
     componentDidMount() {
-        const { config } = this.props;
-        moment(config.language);
+
     }
 
     _onPressItem(item) {
@@ -33,18 +37,17 @@ class History extends Component {
 
         const selectItem = this.state.select;
 
-        console.log(selectItem);
-
         return (
             <View style={{ flex: 1 }}>
                 <Modal
-                    height={370}
-                    width={300}
+                    height={'70%'}
+                    width={'90%'}
                     visible={this.state.modal}
                     transparent={true}
                     animationType="fade"
                     hardwareAccelerated={true}
                     backgroundColor='#0005'
+                    onRequestClose={() => this.setState({ modal: false })}
                     pressOut={() => this.setState({ modal: false })}
                 >
                     {
@@ -52,10 +55,10 @@ class History extends Component {
                             <View style={{ flex: 1, padding: 10 }}>
                                 <View style={{ flex: .1, padding: 4, marginVertical: 10, justifyContent: 'center' }}>
 
-                                    <Text style={material.display1}>Eto {selectItem.Eto.toFixed(3)} mm</Text>
+                                    <Text style={material.display1}>Eto {selectItem.Eto.toFixed(2)} mm</Text>
 
                                 </View>
-                                <View style={{ flex: .4, padding: 4, backgroundColor: '#1111' }}>
+                                <View style={{ flex: .4, padding: 4, justifyContent: 'space-around', backgroundColor: '#0001' }}>
 
                                     <Text style={[material.body1, systemWeights.light]}>Lat: {selectItem.location.lat.toFixed(6)}  Lon: {selectItem.location.lon.toFixed(6)}</Text>
                                     {
@@ -64,26 +67,26 @@ class History extends Component {
                                             :
                                             null
                                     }
-                                    <Text style={[material.body1, systemWeights.light]}>Serviço: {selectItem.service}, {selectItem.type}</Text>
-                                    <Text style={[material.body1, systemWeights.light]}>Calculo: {selectItem.calculationType}</Text>
-                                    <Text style={[material.body1, systemWeights.light]}>Equação: {selectItem.equation}</Text>
+                                    <Text style={[material.body1, systemWeights.light]}>{string('HISTORIC_service')}: {selectItem.service}, {selectItem.type}</Text>
+                                    <Text style={[material.body1, systemWeights.light]}>{string('HISTORIC_calculation')}: {selectItem.calculationType}</Text>
+                                    <Text style={[material.body1, systemWeights.light]}>{string('HISTORIC_equation')}: {selectItem.equation}</Text>
 
                                 </View>
-                                <View style={{ flex: .4, padding: 4, marginVertical: 10, backgroundColor: '#1111' }}>
+                                <View style={{ flex: .4, justifyContent: 'space-around', padding: 4, marginVertical: 10, backgroundColor: '#1111' }}>
 
-                                    <Text style={material.caption}>Radiação global(Qo): {selectItem.Rad_Q0}</Text>
-                                    <Text style={material.caption}>Radicação superficie(Qg): {selectItem.Rad_Qg}</Text>
-                                    <Text style={material.caption}>Umidade: {selectItem.Hum} </Text>
-                                    <Text style={material.caption}>Temperatura maxima: {selectItem.Tmax}</Text>
-                                    <Text style={material.caption}>Temperatura minima: {selectItem.Tmin}</Text>
-                                    <Text style={material.caption}>Velocidade do vento: {selectItem.Wind}</Text>
-                                    <Text style={material.caption}>Elevação: {selectItem.location.elevation}</Text>
+                                    <Text style={[systemWeights.light, { color: '#808080' }]}>{string('HISTORIC_qo')}: {selectItem.Rad_Q0} MJ m/d</Text>
+                                    <Text style={[systemWeights.light, { color: '#808080' }]}>{string('HISTORIC_qg')}: {selectItem.Rad_Qg} MJ m/d</Text>
+                                    <Text style={[systemWeights.light, { color: '#808080' }]}>{string('HISTORIC_umi')}: {selectItem.Hum}%</Text>
+                                    <Text style={[systemWeights.light, { color: '#808080' }]}>{string('HISTORIC_tmax')}: {selectItem.Tmax} °C</Text>
+                                    <Text style={[systemWeights.light, { color: '#808080' }]}>{string('HISTORIC_tmin')}: {selectItem.Tmin} °C</Text>
+                                    <Text style={[systemWeights.light, { color: '#808080' }]}>{string('HISTORIC_wind')}: {selectItem.Wind} m/s</Text>
+                                    <Text style={[systemWeights.light, { color: '#808080' }]}>{string('HISTORIC_elevation')}: {selectItem.location.elevation} m</Text>
 
                                 </View>
                                 <View style={{ flex: .1, padding: 5 }}>
                                     {
                                         selectItem.distance ?
-                                            <Text style={[material.caption, systemWeights.regular, { fontStyle: 'italic' }]}>A {selectItem.distance} km da estação mais próxima</Text>
+                                            <Text style={[material.caption, systemWeights.regular, { fontStyle: 'italic' }]}> {selectItem.distance} m {string('HISTORIC_distance')}</Text>
                                             :
                                             null
                                     }
@@ -99,7 +102,7 @@ class History extends Component {
                     renderItem={({ item }) => (
                         <ListItem
                             key={item}
-                            title={`Eto: ${item.Eto.toFixed(3)} mm `}
+                            title={`Eto: ${item.Eto.toFixed(2)} mm `}
                             subtitle={`${moment(item.date).format('dddd, MM MMM')}`}
                             bottomDivider
                             onPress={() => this._onPressItem(item)}

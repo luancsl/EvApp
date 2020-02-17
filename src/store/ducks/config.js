@@ -3,6 +3,8 @@ import { createActions, createReducer } from 'reduxsauce';
 /* Types and actions */
 export const { Types, Creators } = createActions({
     changeSearching: ['value'],
+    noWelcome: [''],
+    changeLanguage: ['value'],
     changeEto: ['value'],
     changeEquation: ['value'],
     changeCalcEto: ['value'],
@@ -18,7 +20,8 @@ export const { Types, Creators } = createActions({
 
 /* Valaue init */
 const INITIAL_STATE = {
-    language: 'pt-br',
+    welcome: true,
+    language: 'en_US',
     searching: false,
     eto: 3,
     newHistoric: false,
@@ -42,6 +45,20 @@ const INITIAL_STATE = {
 
 
 /* Functions Reducers */
+const noWelcome = (state = INITIAL_STATE, action) => {
+    return {
+        ...state,
+        welcome: false
+    }
+};
+
+const changeLanguage = (state = INITIAL_STATE, action) => {
+    return {
+        ...state,
+        language: action.value
+    }
+};
+
 const changeEto = (state = INITIAL_STATE, action) => {
     return {
         ...state,
@@ -112,6 +129,8 @@ const changeDefaultConfig = (state = INITIAL_STATE, action) => {
 /* Create reducers */
 export default createReducer(INITIAL_STATE, {
     [Types.CHANGE_SEARCHING]: changeSearching,
+    [Types.NO_WELCOME]: noWelcome,
+    [Types.CHANGE_LANGUAGE]: changeLanguage,
     [Types.CHANGE_ETO]: changeEto,
     [Types.CHANGE_EQUATION]: changeEquation,
     [Types.CHANGE_CALC_ETO]: changeCalcEto,

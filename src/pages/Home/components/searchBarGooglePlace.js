@@ -3,6 +3,7 @@ import { View, TouchableOpacity } from "react-native";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { Icon, SearchBar } from 'react-native-elements'
 import { Modal } from '@components';
+import { string } from "@locales";
 
 class SearchBarGooglePlace extends Component {
     constructor(props) {
@@ -50,7 +51,7 @@ class SearchBarGooglePlace extends Component {
                 >
                     <SearchBar
                         editable={false}
-                        placeholder="Entre Local"
+                        placeholder={string('HOME_search_description')}
                         onFocus={() => this._showModal()}
                         value={this.state.text}
                         searchIcon={{

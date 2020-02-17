@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { PureComponent } from "react";
 import AppRoutes from './routes';
-import { connect } from "react-redux";
 
-const App = (props) => <AppRoutes screenProps={{ badge: props.config.searching }} />
+class App extends PureComponent {
+
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <AppRoutes />
+        );
+    }
+}
 
 
-export default connect(
-    (state) => ({
-        config: state.configState
-    })
-)(App);
+export default App;
