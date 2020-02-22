@@ -7,11 +7,9 @@ import { bindActionCreators } from "redux";
 import { Creators as SpaceActions } from "@store/ducks/space";
 import { Creators as ConfigActions, Types } from "@store/ducks/config";
 import Geolocation from '@react-native-community/geolocation';
-import moment from "moment";
-import 'moment/min/locales';
 import Equation from '@utils';
 import { ModalPicker } from '@components';
-import { Color, LanguageDevice } from '@common';
+import { Color, DateFns } from '@common';
 import { string } from "@locales";
 import SplashScreen from 'react-native-splash-screen'
 import { copilot, walkthroughable, CopilotStep } from 'react-native-copilot';
@@ -49,7 +47,6 @@ class Home extends Component {
                 longitudeDelta: 0.0131
             },
         };
-        moment.locale(LanguageDevice());
         this._updateMyLocation();
     }
 
@@ -64,7 +61,7 @@ class Home extends Component {
     }
 
     _getCurrentDate(delay) {
-        return moment().subtract(delay, 'days').format('YYYYMMDD');
+        return DateFns.mFormat(DateFns.mSubDays(new Date(), delay), 'yyyyMMdd');
     }
 
     _getETo() {
@@ -94,7 +91,7 @@ class Home extends Component {
             const space = {
                 service,
                 type,
-                date: moment().format('YYYYMMDD'),
+                date: new Date().toISOString(),
                 ...parameters,
                 ...{
                     ...data,

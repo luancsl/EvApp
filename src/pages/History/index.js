@@ -2,14 +2,12 @@ import React, { Component } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import { ListItem } from 'react-native-elements'
 import { Modal } from '@components';
-import { LanguageDevice } from "@common";
+import { DateFns } from "@common";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Creators as SpaceActions } from "@store/ducks/space";
 import { material, systemWeights } from 'react-native-typography';
 import { string } from "@locales";
-import moment from "moment";
-import 'moment/min/locales';
 
 class History extends Component {
 
@@ -20,7 +18,6 @@ class History extends Component {
             modal: false,
 
         };
-        moment.locale(LanguageDevice());
     }
 
 
@@ -38,7 +35,7 @@ class History extends Component {
         const selectItem = this.state.select;
 
         return (
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, backgroundColor: '#F8F8F8' }}>
                 <Modal
                     height={'70%'}
                     width={'90%'}
@@ -55,7 +52,7 @@ class History extends Component {
                             <View style={{ flex: 1, padding: 10 }}>
                                 <View style={{ flex: .1, padding: 4, marginVertical: 10, justifyContent: 'center' }}>
 
-                                    <Text style={material.display1}>Eto {selectItem.Eto.toFixed(2)} mm</Text>
+                                    <Text style={material.display1}>ETo {selectItem.Eto.toFixed(2)} mm</Text>
 
                                 </View>
                                 <View style={{ flex: .4, padding: 4, justifyContent: 'space-around', backgroundColor: '#0001' }}>
@@ -102,8 +99,8 @@ class History extends Component {
                     renderItem={({ item }) => (
                         <ListItem
                             key={item}
-                            title={`Eto: ${item.Eto.toFixed(2)} mm `}
-                            subtitle={`${moment(item.date).format('dddd, MM MMM')}`}
+                            title={`ETo: ${item.Eto.toFixed(2)} mm `}
+                            subtitle={DateFns.mFormatRelative(item.date)}
                             bottomDivider
                             onPress={() => this._onPressItem(item)}
                         />

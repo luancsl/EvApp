@@ -25,11 +25,11 @@ const INITIAL_STATE = {
     searching: false,
     eto: 3,
     newHistoric: false,
-    equation: 'penman-monteith',
+    equation: 'Penman-Monteith',
     defaultConfig: {
         service: 'inmet',
         type: 'station',
-        equation: 'hargreaves-samani',
+        equation: 'Penman-Monteith',
         distance: 60
     },
     calc: {

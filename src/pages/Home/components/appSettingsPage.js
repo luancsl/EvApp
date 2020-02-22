@@ -21,7 +21,7 @@ class AppSettingsPage extends PureComponent {
 
             },
             modal: false,
-            equation: 'penman-monteith',
+            equation: 'Penman-Monteith',
 
         }
     }
