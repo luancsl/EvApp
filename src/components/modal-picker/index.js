@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { View,TouchableOpacity, FlatList } from "react-native";
-import { Button, ListItem } from 'react-native-elements'
+import { Button, ListItem, Icon } from 'react-native-elements'
 import { Modal } from '@components';
 
 

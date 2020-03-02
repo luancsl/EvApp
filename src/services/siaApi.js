@@ -3,14 +3,14 @@ import { Constants } from "@common";
 export default {
     climate: async (lat, long, dataInicial, dataFinal, distancia) => {
 
-        const request = await fetch(`http://${Constants.SIA_API_Address}:3000/service/eto?lat=${lat}&lon=${long}&distance=${distancia}&startDate=${dataInicial}&endDate=${dataFinal}`)
+        const request = await fetch(`http://${Constants.SIA_API_Address}:3000/service/currentEto?lat=${lat}&lon=${long}&distance=${distancia}&startDate=${dataInicial}&endDate=${dataFinal}`)
         const resposta = await request.json();
 
         return resposta;
     },
     eto: (lat, long, dataInicial, dataFinal, distance = 100, service = 'inmet', type = 'station', equation = 'penman-monteith') => {
 
-        const request = fetch(`http://${Constants.SIA_API_Address}:3000/service/eto?lat=${lat}&lon=${long}&distance=${distance}&startDate=${dataInicial}&endDate=${dataFinal}&service=${service}&type=${type}&equation=${equation}`).then((value) => (value.json()))
+        const request = fetch(`http://${Constants.SIA_API_Address}:3000/service/currentEto?lat=${lat}&lon=${long}&distance=${distance}&startDate=${dataInicial}&endDate=${dataFinal}&service=${service}&type=${type}&equation=${equation}`).then((value) => (value.json()))
 
         return request;
     },
@@ -23,7 +23,7 @@ export default {
     },
     etc: async (lat, long, dataInicial, dataFinal, distancia, kc) => {
 
-        const request = await fetch(`http://${Constants.SIA_API_Address}:3000/service/etc?lat=${lat}&lon=${long}&distance=${distancia}&startDate=${dataInicial}&endDate=${dataFinal}&kc=${kc}`)
+        const request = await fetch(`http://${Constants.SIA_API_Address}:3000/service/currentEtc?lat=${lat}&lon=${long}&distance=${distancia}&startDate=${dataInicial}&endDate=${dataFinal}&kc=${kc}`)
         const resposta = await request.json();
 
         return resposta;

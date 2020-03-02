@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, Picker } from "react-native";
 import DisplayCalc from "./components/display";
+import { ConvDecSeparator } from '@common';
 
 
 class Calc extends Component {
@@ -29,20 +30,24 @@ class Calc extends Component {
                 <View style={styles.header}>
                     <View style={{ flex: .8, paddingBottom: 20, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
 
-                        <Text style={{ fontSize: 30 }}> {this.state.eto ? parseFloat(this.state.eto).toFixed(2) + ' mm' : '...'} </Text>
+                        <Text style={{ fontSize: 30 }}> {this.state.eto ? 'ETo: ' + ConvDecSeparator(this.state.eto) + ' mm/d' : '...'} </Text>
 
                     </View>
                     <View style={{ flex: .2, justifyContent: 'center', alignItems: 'center', paddingVertical: 6 }}>
                         <Picker
                             selectedValue={this.state.equation}
-                            style={{ height: 20, width: '59%', borderWidth: 4, borderBottomColor: '#000' }}
+                            itemStyle={{ fontWeight: 'bold' }}
+                            style={{ height: 20, width: '59%' }}
                             mode={'dropdown'}
                             onValueChange={(itemValue, itemIndex) => this._onChangeEquation(itemValue)}
                         >
                             {
                                 [
                                     'Penman-Monteith',
-                                    'Hargreaves-Samani'
+                                    'Hargreaves-Samani',
+                                    'Priestley-Taylor',
+                                    'Linacre',
+                                    'Camargo-71',
                                 ].map((item) => (
                                     <Picker.Item label={item} value={item.toLowerCase()} />
                                 ))

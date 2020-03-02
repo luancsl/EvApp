@@ -32,7 +32,7 @@ class PenmanMonteith extends PureComponent {
     _onPressCalculate() {
         const { qo, qg, rhmean, tmax, tmin, u2, elmsl } = this.state;
         const [Calculate, equationName] = Equation(this.props.equation);
-        const result = Calculate(qg, qo, rhmean, tmax, tmin, u2, elmsl);
+        const result = Calculate({ qg, qo, rhmean, tmax, tmin, u2, elmsl });
 
         this.props.onCalculateValue(result);
     }

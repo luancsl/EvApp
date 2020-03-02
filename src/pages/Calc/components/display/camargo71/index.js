@@ -5,18 +5,14 @@ import Equation from '@utils';
 import { string } from "@locales";
 import { Color } from "@common";
 
-class HargreavesSamani extends PureComponent {
+class Camargo71 extends PureComponent {
 
     constructor(props) {
         super(props);
         this.state = {
             qo: 0,
-            qg: 0,
-            rhmean: 0,
             tmax: 0,
             tmin: 0,
-            u2: 0,
-            elmsl: 0
         };
         this.textInput = {};
     }
@@ -30,10 +26,9 @@ class HargreavesSamani extends PureComponent {
     }
 
     _onPressCalculate() {
-
-        const { qo, qg, rhmean, tmax, tmin, u2, elmsl } = this.state;
+        const { qo, tmax, tmin } = this.state;
         const [Calculate, equationName] = Equation(this.props.equation);
-        const result = Calculate({ qg, qo, rhmean, tmax, tmin, u2, elmsl });
+        const result = Calculate({ qo, tmax, tmin });
 
         this.props.onCalculateValue(result);
     }
@@ -53,7 +48,6 @@ class HargreavesSamani extends PureComponent {
                         placeholderTextColor={Color.calc.placeholder}
                         leftIcon={{ type: 'font-awesome', size: 10, name: 'chevron-right', color: Color.calc.icon_form }}
                         onChangeText={text => this.setState({ qo: parseFloat(text) })}
-                        value={this.state.qo}
                     />
                     <Input
                         ref={ref => this.textInput[1] = ref}
@@ -70,7 +64,7 @@ class HargreavesSamani extends PureComponent {
                     <Input
                         ref={ref => this.textInput[2] = ref}
                         onSubmitEditing={() => this._onPressCalculate()}
-                        returnKeyType={"done"}
+                        returnKeyType={"next"}
                         blurOnSubmit={false}
                         label={string('CALC_tmin')}
                         placeholder='9 °C'
@@ -102,7 +96,7 @@ class HargreavesSamani extends PureComponent {
     }
 }
 
-export default HargreavesSamani;
+export default Camargo71;
 
 const styles = StyleSheet.create({
 

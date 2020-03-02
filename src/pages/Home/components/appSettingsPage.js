@@ -22,6 +22,8 @@ class AppSettingsPage extends PureComponent {
             },
             modal: false,
             equation: 'Penman-Monteith',
+            enabledService: true,
+            enabledType: true
 
         }
     }
@@ -34,15 +36,68 @@ class AppSettingsPage extends PureComponent {
 
     _handleClosed() {
         const { onClosed } = this.props;
+        this.setState({ enabledService: true, enabledType: true });
         onClosed();
     }
 
     async _setDefaultConfig() {
         const { changeDefaultConfig, onClosed, onSavedSettings } = this.props;
+        this.setState({ enabledService: true, enabledType: true });
         onClosed();
         await changeDefaultConfig(this.state.defaultConfig);
         onSavedSettings();
 
+    }
+
+    _handleServiceChangeValue(value) {
+
+        if (value == 'inmet') {
+            this.setState({
+                ...this.state,
+                defaultConfig: {
+                    ...this.state.defaultConfig,
+                    service: value,
+                    type: 'station'
+                },
+                enabledType: false
+            })
+        } else if (value == 'nasa-power') {
+            this.setState({
+                ...this.state,
+                defaultConfig: {
+                    ...this.state.defaultConfig,
+                    service: value,
+                    type: 'satellite'
+                },
+                enabledType: false
+            })
+        }
+
+    }
+
+    _handleTypeChangeValue(value) {
+
+        if (value == 'station') {
+            this.setState({
+                ...this.state,
+                defaultConfig: {
+                    ...this.state.defaultConfig,
+                    type: value,
+                    service: 'inmet'
+                },
+                enabledService: false
+            })
+        } else if (value == 'satellite') {
+            this.setState({
+                ...this.state,
+                defaultConfig: {
+                    ...this.state.defaultConfig,
+                    type: value,
+                    service: 'nasa-power'
+                },
+                enabledService: false
+            })
+        }
     }
 
     render() {
@@ -95,7 +150,9 @@ class AppSettingsPage extends PureComponent {
                                 {
                                     [
                                         'Penman-Monteith',
-                                        'Hargreaves-Samani'
+                                        'Hargreaves-Samani',
+                                        'Priestley-Taylor',
+                                        'Camargo-71'
                                     ].map((item) => (
                                         <Picker.Item label={item} value={item} />
                                     ))
@@ -106,14 +163,9 @@ class AppSettingsPage extends PureComponent {
                             <Text style={[material.subheading, systemWeights.bold, { color: '#606060' }]}>{string('HOME_settings_select_service')}: </Text>
                             <Picker
                                 style={{ height: 30 }}
+                                enabled={this.state.enabledService}
                                 selectedValue={this.state.defaultConfig.service}
-                                onValueChange={(itemValue, itemIndex) => this.setState({
-                                    ...this.state,
-                                    defaultConfig: {
-                                        ...this.state.defaultConfig,
-                                        service: itemValue
-                                    }
-                                })}>
+                                onValueChange={(itemValue, itemIndex) => this._handleServiceChangeValue(itemValue)}>
                                 {
                                     [
                                         'Inmet',
@@ -128,14 +180,9 @@ class AppSettingsPage extends PureComponent {
                             <Text style={[material.subheading, systemWeights.bold, { color: '#606060' }]}>{string('HOME_settings_select_type')}: </Text>
                             <Picker
                                 style={{ height: 30 }}
+                                enabled={this.state.enabledType}
                                 selectedValue={this.state.defaultConfig.type}
-                                onValueChange={(itemValue, itemIndex) => this.setState({
-                                    ...this.state,
-                                    defaultConfig: {
-                                        ...this.state.defaultConfig,
-                                        type: itemValue
-                                    }
-                                })}>
+                                onValueChange={(itemValue, itemIndex) => this._handleTypeChangeValue(itemValue)}>
                                 {
                                     [
                                         'Station',

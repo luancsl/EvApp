@@ -42,6 +42,10 @@ class SearchBarGooglePlace extends Component {
         this.setState({ text: value, modal: false })
     }
 
+    clear() {
+        this.setState({ text: '' });
+    }
+
     render() {
         return (
             <View>

@@ -27,14 +27,13 @@ class About extends Component {
                 </View>
                 <View style={styles.body}>
                     <ScrollView showsVerticalScrollIndicator={false}>
-                        <View style={{ padding: 5 }} >
+                        <TouchableOpacity style={{ padding: 5 }} onPress={() => (Linking.openURL('mailto:luancsl95@gmail.com'))}>
                             <Text>Luan Carlos Soares Lins</Text>
                             <View style={{ marginLeft: 5 }}>
                                 <Text style={material.caption}>{string('ABOUT_member01_level')}</Text>
-                                <Text style={material.caption}>luancsl95@gmail.com</Text>
                                 <Text style={material.caption}>{string('ABOUT_member01_function')}</Text>
                             </View>
-                        </View>
+                        </TouchableOpacity>
 
                         <Divider style={{ backgroundColor: '#0004' }} />
 
@@ -42,7 +41,6 @@ class About extends Component {
                             <Text>Jean Carlos Teixeira de Araujo</Text>
                             <View style={{ marginLeft: 5 }}>
                                 <Text style={material.caption}>{string('ABOUT_member02_level')}</Text>
-                                <Text style={material.caption}>teixeirajean1@gmail.com</Text>
                                 <Text style={material.caption}>{string('ABOUT_member02_function')}</Text>
                             </View>
                         </TouchableOpacity>
@@ -53,12 +51,19 @@ class About extends Component {
                             <Text>José Romualdo de Sousa Lima</Text>
                             <View style={{ marginLeft: 5 }}>
                                 <Text style={material.caption}>{string('ABOUT_member03_level')}</Text>
-                                <Text style={material.caption}>romualdo.lima@ufrpe.br</Text>
                                 <Text style={material.caption}>{string('ABOUT_member03_function')}</Text>
                             </View>
                         </TouchableOpacity>
 
                         <Divider style={{ backgroundColor: '#0004' }} />
+
+                        <TouchableOpacity style={{ padding: 5 }} onPress={() => (Linking.openURL('mailto:unamecontact@gmail.com'))}>
+                            <Text>UNAME Group Research</Text>
+                            <View style={{ marginLeft: 5 }}>
+                                <Text style={material.caption}>unamecontact@gmail.com</Text>
+                            </View>
+                        </TouchableOpacity>
+
                     </ScrollView>
                 </View>
                 <View style={styles.footer}>

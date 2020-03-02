@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import { ListItem } from 'react-native-elements'
 import { Modal } from '@components';
-import { DateFns } from "@common";
+import { DateFns, ConvDecSeparator } from "@common";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Creators as SpaceActions } from "@store/ducks/space";
@@ -52,7 +52,7 @@ class History extends Component {
                             <View style={{ flex: 1, padding: 10 }}>
                                 <View style={{ flex: .1, padding: 4, marginVertical: 10, justifyContent: 'center' }}>
 
-                                    <Text style={material.display1}>ETo {selectItem.Eto.toFixed(2)} mm</Text>
+                                    <Text style={material.display1}>ETo: {ConvDecSeparator(selectItem.Eto)} mm/d</Text>
 
                                 </View>
                                 <View style={{ flex: .4, padding: 4, justifyContent: 'space-around', backgroundColor: '#0001' }}>
@@ -99,7 +99,7 @@ class History extends Component {
                     renderItem={({ item }) => (
                         <ListItem
                             key={item}
-                            title={`ETo: ${item.Eto.toFixed(2)} mm `}
+                            title={`ETo: ${ConvDecSeparator(item.Eto)} mm/d `}
                             subtitle={DateFns.mFormatRelative(item.date)}
                             bottomDivider
                             onPress={() => this._onPressItem(item)}

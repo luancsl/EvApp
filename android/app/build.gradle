@@ -132,8 +132,8 @@ android {
         applicationId "com.uname.evapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3145733
-        versionName "1.0.4"
+        versionCode 3145734
+        versionName "1.0.5"
     }
     splits {
         abi {

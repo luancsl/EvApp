@@ -1,5 +1,6 @@
 const att = {
     alpha: 0.2,
+    priestley: 1.26,
     sigma: 5.67 * Math.pow(10, -8),
     G: 0.8,
     y: 0.063
@@ -41,14 +42,22 @@ const delta_svp = t => {
     return tmp / Math.pow(t + 237.3, 2);
 };
 
-const pet = (Rn, t, u2, es, ea, delta_svp, y, G) => {
-    const a1 = (0.408 * (Rn - G) * delta_svp) / (delta_svp + y * (1 + 0.34 * u2));
-    const a2 = (((900 * u2) / t) * (es - ea) * y) / (delta_svp + y * (1 + 0.34 * u2));
-    return a1 + a2;
+const eto = (alpha, delta_svp, y, Rn, G, tmean) => {
+
+    console.log("priestley-taylor", `${alpha}, ${delta_svp}, ${y}, ${Rn}, ${G}`);
+
+    const temp0 = delta_svp / (delta_svp + y);
+    const temp1 = Rn + G;
+    const temp2 = 2.501 - (0.0022361 * tmean);
+    const temp3 = (alpha / temp2) * temp0 * temp1;
+
+    console.log("priestley-taylor", `${temp2}, ${temp3}`);
+
+    return temp3;
 };
 
-export default ({ qg, qo, rhmean, tmax, tmin, u2, elmsl } = {}) => {
-    console.log("penman-monteith", `${qg}, ${qo}, ${rhmean}, ${tmax}, ${tmin}, ${u2}, ${elmsl}`);
+export default ({ qg, qo, rhmean, tmax, tmin, u2 = null, elmsl } = {}) => {
+    console.log("priestley-taylor", `${qg}, ${qo}, ${rhmean}, ${tmax}, ${tmin}, ${u2}, ${elmsl}`);
     qg = qg * (Math.pow(10, 6) / 86400);
     qo = qo * (Math.pow(10, 6) / 86400);
     const Tmean = t_mean(tmax, tmin);
@@ -56,12 +65,11 @@ export default ({ qg, qo, rhmean, tmax, tmin, u2, elmsl } = {}) => {
     const es = get_es_medio(get_es(tmax), get_es(tmin));
     const ea = get_ea(es, rhmean);
     const qajustado = q_ajustado(elmsl, qo);
-
+    console.log("priestley-taylor", `${att.alpha}, ${qg}, ${att.sigma}, ${tmin}, ${Tmean}, ${qajustado}, ${ea}`);
     let Rn = get_Rn(att.alpha, qg, att.sigma, tmin, Tmean, qajustado, ea);
     Rn = Rn * (86400 / Math.pow(10, 6));
 
-    console.log("penman-monteith", `${delta}, ${Rn}`);
-    const result = pet(Rn, Tmean + 273, u2, es, ea, delta, att.y, att.G);
+    const result = eto(att.priestley, delta, att.y, Rn, att.G, Tmean);
 
     return result;
 

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, ActivityIndicator, ToastAndroid } from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator, ToastAndroid, Alert } from "react-native";
 import { sia } from "@services";
 import { Image, Icon } from 'react-native-elements'
 import { connect } from "react-redux";
@@ -9,7 +9,7 @@ import { Creators as ConfigActions, Types } from "@store/ducks/config";
 import Geolocation from '@react-native-community/geolocation';
 import Equation from '@utils';
 import { ModalPicker } from '@components';
-import { Color, DateFns } from '@common';
+import { Color, DateFns, ConvDecSeparator } from '@common';
 import { string } from "@locales";
 import SplashScreen from 'react-native-splash-screen'
 import { copilot, walkthroughable, CopilotStep } from 'react-native-copilot';
@@ -25,7 +25,7 @@ class Home extends Component {
         this.state = {
             lat: 0,
             lon: 0,
-            eto: '00',
+            eto: '0.00',
             equation: 'Penman-Monteith',
             searching: true,
             data: null,
@@ -101,6 +101,7 @@ class Home extends Component {
             addSpace(space);
             changeHistoric(true);
             this.setState({ searching: false });
+            this._getNearbyStations();
 
             ToastAndroid.showWithGravityAndOffset(
                 string('HOME_toast_completed_result'),
@@ -119,13 +120,29 @@ class Home extends Component {
         const { Rad_Q0, Rad_Qg, Hum, Tmax, Tmin, Wind } = this.state.data.data[0];
         const [Calculate, equationName] = Equation(equation.toLowerCase());
 
-        const result = Calculate(Rad_Qg, Rad_Q0, Hum, Tmax, Tmin, Wind, elmsl);
+        const result = Calculate({ qg: Rad_Qg, qo: Rad_Q0, rhmean: Hum, tmax: Tmax, tmin: Tmin, u2: Wind, elmsl });
+
         this.setState({ eto: result, equation: equation });
+
+    }
+
+    _alertParametersNotFound() {
+        Alert.alert(
+            string('HOME_alert_parametersNotFound_title'),
+            string('HOME_alert_parametersNotFound_message'),
+            [
+                { text: string('HOME_alert_parametersNotFound_ok') },
+            ],
+        );
     }
 
     _changeEquation(value) {
-        this.setState({ equation: value })
-        this._calculateETo(value);
+        if (!this.state.searching) {
+            this.setState({ equation: value })
+            this._calculateETo(value);
+        } else {
+            this._alertParametersNotFound();
+        }
     }
 
     _updateMyLocation() {
@@ -142,6 +159,11 @@ class Home extends Component {
                     lon: position.coords.longitude,
                     region: region
                 });
+
+                if (this.searchComponent !== undefined) {
+                    this.searchComponent.clear();
+                }
+
                 this._getETo();
             },
             error => {
@@ -175,7 +197,6 @@ class Home extends Component {
     async _handleOnPressMap(value) {
         await this.setState({ lat: value.coordinate.latitude, lon: value.coordinate.longitude });
         this._getETo();
-        this._getNearbyStations();
     }
 
     _handleAppSettingClosed() {
@@ -185,7 +206,6 @@ class Home extends Component {
     _handleAppSettingSaved() {
         this.setState({ appSettingsVisible: false });
         this._getETo();
-        this._getNearbyStations();
     }
 
     async _handleStationPinButton() {
@@ -300,6 +320,7 @@ class Home extends Component {
                                         <CopilotStep text={string('HOME_copilot_search')} order={2} name="search">
                                             <CopilotView>
                                                 <SearchBarGooglePlace
+                                                    ref={ref => this.searchComponent = ref}
                                                     placeholder={string('HOME_search_description')}
                                                     onSearchPlace={(value) => this._handleSearchPlace(value)}
                                                 />
@@ -312,23 +333,31 @@ class Home extends Component {
                                                     this.state.searching ?
                                                         <ActivityIndicator size="large" color={Color.home.activity_indicator} />
                                                         :
-                                                        <Text style={{ fontSize: 30 }}> {parseFloat(this.state.eto).toFixed(2)} mm </Text>
+                                                        <Text style={{ fontSize: 30 }}> ETo: {ConvDecSeparator(this.state.eto)} mm/d </Text>
                                                 }
                                             </CopilotView>
                                         </CopilotStep>
 
                                         <View style={{ flex: .5, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginVertical: 10 }}>
-                                            <CopilotStep text={string('HOME_copilot_settings')} order={4} name="settings">
+
+                                            <CopilotStep text={string('HOME_copilot_equation')} order={4} name="equation">
                                                 <CopilotView>
-                                                    <Icon
-                                                        raised
-                                                        name='settings-outline'
-                                                        type='material-community'
-                                                        color={Color.home.buttons_display}
-                                                        size={15}
-                                                        containerStyle={{ borderWidth: 1, borderRadius: 50, backgroundColor: '#1114', borderColor: '#1111' }}
-                                                        underlayColor={Color.home.buttons_display_ground}
-                                                        onPress={() => this._handleAppSettingsPressed()} />
+                                                    <ModalPicker
+                                                        data={['Penman-Monteith', 'Hargreaves-Samani', 'Priestley-Taylor', 'Camargo-71']}
+                                                        selected={this.state.equation}
+                                                        onPress={(value) => this._changeEquation(value)}
+                                                        icon={
+                                                            <Icon
+                                                                raised
+                                                                name='function'
+                                                                type='material-community'
+                                                                color={Color.home.buttons_display}
+                                                                size={15}
+                                                                containerStyle={{ borderWidth: 1, borderRadius: 50, backgroundColor: '#1114', borderColor: '#1111' }}
+                                                                underlayColor={Color.home.buttons_display_ground}
+                                                            />
+                                                        }
+                                                    />
                                                 </CopilotView>
                                             </CopilotStep>
 
@@ -360,25 +389,20 @@ class Home extends Component {
                                                 </CopilotView>
                                             </CopilotStep>
 
-                                            <CopilotStep text={string('HOME_copilot_equation')} order={7} name="equation">
+                                            <CopilotStep text={string('HOME_copilot_settings')} order={7} name="settings">
                                                 <CopilotView>
-                                                    <ModalPicker
-                                                        data={['Penman-Monteith', 'Hargreaves-Samani']}
-                                                        selected={this.state.equation}
-                                                        onPress={(value) => this._changeEquation(value)}
-                                                        icon={
-                                                            <Icon
-                                                                raised
-                                                                name='function'
-                                                                type='material-community'
-                                                                color={Color.home.buttons_display}
-                                                                size={15}
-                                                                containerStyle={{ borderWidth: 1, borderRadius: 50, backgroundColor: '#1114', borderColor: '#1111' }}
-                                                            />
-                                                        }
-                                                    />
+                                                    <Icon
+                                                        raised
+                                                        name='settings-outline'
+                                                        type='material-community'
+                                                        color={Color.home.buttons_display}
+                                                        size={15}
+                                                        containerStyle={{ borderWidth: 1, borderRadius: 50, backgroundColor: '#1114', borderColor: '#1111' }}
+                                                        underlayColor={Color.home.buttons_display_ground}
+                                                        onPress={() => this._handleAppSettingsPressed()} />
                                                 </CopilotView>
                                             </CopilotStep>
+
                                         </View>
                                     </View>
                                 </CopilotView>
